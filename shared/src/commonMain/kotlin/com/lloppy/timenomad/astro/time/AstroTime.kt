@@ -6,14 +6,12 @@ import kotlinx.datetime.LocalTime
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-/** Географическая точка. Долгота: восток положительный, запад отрицательный. */
 data class GeoLocation(
     val latitude: Double,
     val longitude: Double,
     val label: String = "",
 ) {
     companion object {
-        /** Дефолт для расчёта текущего неба, если профиль/локация не заданы. */
         val GREENWICH = GeoLocation(51.4779, 0.0, "Гринвич")
     }
 }
@@ -26,19 +24,13 @@ object AstroTime {
     @OptIn(ExperimentalTime::class)
     fun nowUtcMillis(): Long = Clock.System.now().toEpochMilliseconds()
 
-    /** Юлианская дата (UT) из Unix-времени в миллисекундах. */
     fun julianDay(epochMillis: Long): Double = epochMillis / 86_400_000.0 + JD_UNIX_EPOCH
 
     fun epochMillis(julianDay: Double): Long =
         ((julianDay - JD_UNIX_EPOCH) * 86_400_000.0).toLong()
 
-    /** Века по 36525 суток от эпохи J2000.0. */
     fun julianCenturiesT(julianDay: Double): Double = (julianDay - J2000) / 36525.0
 
-    /**
-     * Unix-миллисекунды из локальных даты/времени и смещения часового пояса (в минутах от UTC).
-     * Перевод в UTC выполняется вычитанием смещения — без обращения к базе часовых поясов.
-     */
     fun epochMillisFromLocal(
         local: LocalDateTime,
         utcOffsetMinutes: Int,
@@ -52,10 +44,6 @@ object AstroTime {
     fun localDateTime(year: Int, month: Int, day: Int, hour: Int, minute: Int): LocalDateTime =
         LocalDateTime(LocalDate(year, month, day), LocalTime(hour, minute))
 
-    /**
-     * Среднее гринвичское звёздное время (GMST) в градусах для заданной JD (UT).
-     * Формула Meeus (гл. 12).
-     */
     fun greenwichMeanSiderealTime(julianDay: Double): Double {
         val t = julianCenturiesT(julianDay)
         var gmst = 280.46061837 +
@@ -67,7 +55,6 @@ object AstroTime {
         return gmst
     }
 
-    /** Местное звёздное время (LST) в градусах. */
     fun localSiderealTime(julianDay: Double, longitudeEast: Double): Double {
         var lst = greenwichMeanSiderealTime(julianDay) + longitudeEast
         lst %= 360.0

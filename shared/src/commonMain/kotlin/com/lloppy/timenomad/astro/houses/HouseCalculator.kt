@@ -48,7 +48,6 @@ object HouseCalculator {
     fun midheaven(ramc: Double, eps: Double): Double =
         norm360(atan2D(sinD(ramc), cosD(ramc) * cosD(eps)))
 
-    /** Долгота Асцендента. */
     fun ascendant(ramc: Double, eps: Double, latitude: Double): Double {
         val y = cosD(ramc)
         val x = -(sinD(ramc) * cosD(eps) + tanD(latitude) * sinD(eps))
@@ -63,7 +62,6 @@ object HouseCalculator {
     private fun equal(asc: Double): List<Double> =
         (0 until 12).map { norm360(asc + it * 30.0) }
 
-    /** Порфирий: квадранты Asc–IC–Desc–MC трисекцируются по эклиптической долготе. */
     private fun porphyry(asc: Double, mc: Double): List<Double> {
         val ic = norm360(mc + 180.0)
         val desc = norm360(asc + 180.0)
@@ -81,11 +79,6 @@ object HouseCalculator {
         return cusps.toList()
     }
 
-    /**
-     * Плацидус: промежуточные куспиды 11,12,2,3 — методом полудуг (итеративно),
-     * остальные — оппозиции. Возвращает null на высоких широтах (циркумполярные зоны),
-     * где система не определена → вызывающий код откатывается к Порфирию.
-     */
     private fun placidus(
         ramc: Double,
         eps: Double,
@@ -115,11 +108,6 @@ object HouseCalculator {
         return cusps.toList()
     }
 
-    /**
-     * Итерация куспида по полудуге.
-     * [fromIc]=false → дневная полудуга к востоку от MC (куспиды 11,12);
-     * [fromIc]=true  → ночная полудуга к востоку от IC (куспиды 2,3).
-     */
     private fun semiArcCusp(
         ramc: Double,
         eps: Double,

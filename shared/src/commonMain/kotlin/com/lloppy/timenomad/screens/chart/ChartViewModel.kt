@@ -19,9 +19,6 @@ data class ChartScreenState(
     val chart: Chart? = null,
 )
 
-/**
- * Карта неба для текущего момента ([profileId] == null) или натальная карта профиля.
- */
 class ChartViewModel(
     private val profileId: String?,
     private val chartCalculator: ChartCalculator,

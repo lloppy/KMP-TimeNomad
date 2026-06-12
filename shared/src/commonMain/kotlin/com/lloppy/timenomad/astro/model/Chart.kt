@@ -15,7 +15,6 @@ enum class Ayanamsha(val displayName: String) {
     FAGAN_BRADLEY("Фейган—Брэдли"),
 }
 
-/** Тропический или сидерический зодиак (с выбранной аянамшей). */
 sealed interface ZodiacMode {
     data object Tropical : ZodiacMode
     data class Sidereal(val ayanamsha: Ayanamsha = Ayanamsha.LAHIRI) : ZodiacMode
@@ -27,11 +26,9 @@ sealed interface ZodiacMode {
         }
 }
 
-/** Эклиптическая долгота, нормализованная в [0, 360). */
 @JvmInline
 value class Longitude(val degrees: Double) {
     val sign: ZodiacSign get() = ZodiacSign.fromLongitude(degrees)
-    /** Градус внутри знака 0..30. */
     val degreeInSign: Double get() = (((degrees % 360.0) + 360.0) % 360.0) % 30.0
 
     companion object {
@@ -39,10 +36,6 @@ value class Longitude(val degrees: Double) {
     }
 }
 
-/**
- * Положение тела на эклиптике в конкретный момент.
- * [speedLongitude] в °/сутки; отрицательное значение → ретроградное движение.
- */
 data class PlanetPosition(
     val body: CelestialBody,
     val longitude: Double,
@@ -56,17 +49,12 @@ data class PlanetPosition(
     val retrograde: Boolean get() = body.canRetrograde && speedLongitude < 0.0
 }
 
-/** Куспид дома 1..12. */
 data class House(val number: Int, val cusp: Double) {
     val sign: ZodiacSign get() = ZodiacSign.fromLongitude(cusp)
 }
 
-/** Тип карты (для будущих режимов транзитов/синастрии). */
 enum class ChartKind { NATAL, TRANSIT, SYNASTRY, COMPOSITE, PROGRESSED }
 
-/**
- * Рассчитанная астрологическая карта на момент [momentUtcMillis].
- */
 data class Chart(
     val kind: ChartKind,
     val momentUtcMillis: Long,
@@ -83,7 +71,6 @@ data class Chart(
 ) {
     fun position(body: CelestialBody): PlanetPosition? = positions.firstOrNull { it.body == body }
 
-    /** Номер дома (1..12), в котором находится заданная эклиптическая долгота. */
     fun houseOf(longitude: Double): Int {
         if (houses.size != 12) return 0
         val lon = ((longitude % 360.0) + 360.0) % 360.0

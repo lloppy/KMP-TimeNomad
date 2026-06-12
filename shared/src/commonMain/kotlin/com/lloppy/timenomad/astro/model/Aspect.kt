@@ -1,9 +1,5 @@
 package com.lloppy.timenomad.astro.model
 
-/**
- * Тип аспекта: точный угол между телами и дефолтный орбис.
- * [harmonious] = true для гармоничных (трин/секстиль), false для напряжённых.
- */
 enum class AspectType(
     val displayName: String,
     val glyph: String,
@@ -27,10 +23,6 @@ enum class AspectType(
     }
 }
 
-/**
- * Найденный аспект между двумя телами карты.
- * [orb] — отклонение от точного угла (в градусах), [applying] — сходящийся ли аспект.
- */
 data class AspectHit(
     val first: CelestialBody,
     val second: CelestialBody,

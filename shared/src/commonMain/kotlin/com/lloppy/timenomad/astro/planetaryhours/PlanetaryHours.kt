@@ -16,7 +16,6 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-/** Один планетарный час: интервал и управитель. */
 data class PlanetaryHour(
     val index: Int,
     val ruler: CelestialBody,
@@ -25,7 +24,6 @@ data class PlanetaryHour(
     val daytime: Boolean,
 )
 
-/** Результат расчёта планетарных часов вокруг заданного момента. */
 data class PlanetaryHoursResult(
     val dayRuler: CelestialBody,
     val hours: List<PlanetaryHour>,
@@ -34,10 +32,6 @@ data class PlanetaryHoursResult(
     val current: PlanetaryHour? get() = hours.getOrNull(currentIndex)
 }
 
-/**
- * Планетарные дни и часы (халдейский ряд). Сутки идут от восхода до следующего восхода;
- * дневная/ночная части делятся на 12 неравных часов каждая.
- */
 class PlanetaryHoursCalculator(private val ephemeris: EphemerisService) {
 
     fun calculate(momentUtcMillis: Long, latitude: Double, longitudeEast: Double): PlanetaryHoursResult? {
@@ -110,7 +104,6 @@ class PlanetaryHoursCalculator(private val ephemeris: EphemerisService) {
         return RaDec(ra, sun.declination)
     }
 
-    /** JD верхней кульминации Солнца рядом с [jdGuess]. */
     private fun solarTransit(jdGuess: Double, longitudeEast: Double): Double {
         var jt = jdGuess
         repeat(5) {
@@ -121,7 +114,6 @@ class PlanetaryHoursCalculator(private val ephemeris: EphemerisService) {
         return jt
     }
 
-    /** JD восхода/заката Солнца относительно кульминации [transitJd]. */
     private fun solarEvent(
         transitJd: Double,
         latitude: Double,

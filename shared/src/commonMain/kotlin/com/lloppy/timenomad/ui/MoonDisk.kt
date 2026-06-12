@@ -12,10 +12,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.abs
 
-/**
- * Декоративный диск Луны с текущей освещённостью [illumination] (0..1).
- * [waxing] = true → освещена правая сторона (растущая Луна).
- */
 @Composable
 fun MoonDisk(
     illumination: Double,

@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-/** Астрологические настройки расчётов: зодиак, система домов, аянамша, домашняя локация. */
 data class AstroSettings(
     val zodiacMode: ZodiacMode = ZodiacMode.Tropical,
     val houseSystem: HouseSystem = HouseSystem.PLACIDUS,

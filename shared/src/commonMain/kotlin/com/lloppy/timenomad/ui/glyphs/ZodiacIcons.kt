@@ -22,7 +22,6 @@ import com.lloppy.timenomad.resources.sign_virgo
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
-/** SVG-иконка знака зодиака (как векторный ресурс). */
 fun ZodiacSign.iconResource(): DrawableResource = when (this) {
     ZodiacSign.ARIES -> Res.drawable.sign_aries
     ZodiacSign.TAURUS -> Res.drawable.sign_taurus
@@ -38,7 +37,6 @@ fun ZodiacSign.iconResource(): DrawableResource = when (this) {
     ZodiacSign.PISCES -> Res.drawable.sign_pisces
 }
 
-/** Готовый компонент иконки знака с тонировкой. */
 @Composable
 fun ZodiacIcon(sign: ZodiacSign, tint: Color, modifier: Modifier = Modifier) {
     Image(

@@ -8,10 +8,6 @@ import kotlinx.serialization.json.Json
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-/**
- * Хранилище профилей. Список сериализуется в JSON и кладётся в [Settings]
- * (локально на устройстве; синхронизация с облаком — пункт роадмапа).
- */
 class ProfileRepository(private val settings: Settings) {
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -20,7 +16,6 @@ class ProfileRepository(private val settings: Settings) {
 
     fun get(id: String): AstroProfile? = _profiles.value.firstOrNull { it.id == id }
 
-    /** Добавляет новый или обновляет существующий профиль (по [AstroProfile.id]). */
     fun save(profile: AstroProfile): AstroProfile {
         val withId = if (profile.id.isBlank()) profile.copy(id = newId()) else profile
         val list = _profiles.value.filterNot { it.id == withId.id } + withId

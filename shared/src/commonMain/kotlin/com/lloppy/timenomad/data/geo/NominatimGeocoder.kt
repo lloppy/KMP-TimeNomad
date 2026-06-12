@@ -12,11 +12,6 @@ import io.ktor.http.isSuccess
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-/**
- * Геокодер на OpenStreetMap Nominatim (https://nominatim.openstreetmap.org/search).
- * Бесплатно, без ключа. Данные OSM (ODbL) можно сохранять при указании атрибуции «© OpenStreetMap».
- * Политика использования: не более ~1 запроса/сек и осмысленный User-Agent.
- */
 class NominatimGeocoder(
     private val client: HttpClient,
 ) : GeocodingService {

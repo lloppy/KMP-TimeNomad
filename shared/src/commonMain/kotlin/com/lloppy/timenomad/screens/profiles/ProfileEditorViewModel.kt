@@ -2,8 +2,8 @@ package com.lloppy.timenomad.screens.profiles
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lloppy.timenomad.data.geo.GeoPlace
 import com.lloppy.timenomad.data.geo.GeocodingService
+import com.lloppy.timenomad.data.geo.PlaceSearchState
 import com.lloppy.timenomad.data.profile.AstroProfile
 import com.lloppy.timenomad.data.profile.ProfileRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,13 +11,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-data class PlaceSearchState(
-    val loading: Boolean = false,
-    val results: List<GeoPlace> = emptyList(),
-    val error: String? = null,
-)
-
-/** Редактор профиля: предзагрузка, поиск места (геокодер) и сохранение. */
 class ProfileEditorViewModel(
     private val profileId: String?,
     private val repository: ProfileRepository,
@@ -48,7 +41,6 @@ class ProfileEditorViewModel(
         repository.save(profile.copy(id = profileId ?: "")).id
 
     companion object {
-        /** Грубая оценка смещения UTC по долготе (без DST/полит. зон), в минутах. */
         fun estimateUtcOffsetMinutes(longitudeEast: Double): Int {
             val hours = (longitudeEast / 15.0)
             return (hours * 60).let { kotlin.math.round(it / 60.0).toInt() * 60 }

@@ -8,9 +8,6 @@ enum class Modality(val displayName: String) {
     CARDINAL("Кардинальный"), FIXED("Фиксированный"), MUTABLE("Мутабельный")
 }
 
-/**
- * 12 знаков зодиака. [index] 0..11 соответствует эклиптической долготе [index*30, index*30+30).
- */
 enum class ZodiacSign(
     val displayName: String,
     val glyph: String,
@@ -34,7 +31,6 @@ enum class ZodiacSign(
     val index: Int get() = ordinal
 
     companion object {
-        /** Знак по эклиптической долготе (любое значение нормализуется в 0..360). */
         fun fromLongitude(longitude: Double): ZodiacSign {
             val norm = ((longitude % 360.0) + 360.0) % 360.0
             return entries[(norm / 30.0).toInt().coerceIn(0, 11)]

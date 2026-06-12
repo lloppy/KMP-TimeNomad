@@ -5,7 +5,6 @@ import com.lloppy.timenomad.astro.model.AspectType
 import com.lloppy.timenomad.astro.model.CelestialBody
 import com.lloppy.timenomad.astro.model.Element
 
-/** Цвета для отрисовки карты: стихии, аспекты, планеты. Чистые [Color] — годятся для Canvas. */
 object AstroColors {
 
     fun element(element: Element): Color = when (element) {

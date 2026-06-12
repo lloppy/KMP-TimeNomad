@@ -1,5 +1,6 @@
 package com.lloppy.timenomad.screens.settings
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,8 +14,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,9 +25,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lloppy.timenomad.astro.model.Ayanamsha
 import com.lloppy.timenomad.astro.model.HouseSystem
@@ -82,6 +87,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = koinViewModel()) {
             }
 
             HomeLocationCard(
+                viewModel = viewModel,
                 label = state.astro.homeLabel,
                 lat = state.astro.homeLatitude,
                 lon = state.astro.homeLongitude,
@@ -99,9 +105,9 @@ fun SettingsScreen(viewModel: SettingsViewModel = koinViewModel()) {
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun HomeLocationCard(
+    viewModel: SettingsViewModel,
     label: String,
     lat: Double,
     lon: Double,
@@ -110,7 +116,37 @@ private fun HomeLocationCard(
     var l by remember(label) { mutableStateOf(label) }
     var la by remember(lat) { mutableStateOf(lat.toString()) }
     var lo by remember(lon) { mutableStateOf(lon.toString()) }
+    var query by remember { mutableStateOf("") }
+    val searchState by viewModel.search.collectAsStateWithLifecycle()
     card("Домашняя локация (для карты неба)") {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically) {
+            OutlinedTextField(query, { query = it }, label = { Text("Найти город") }, singleLine = true,
+                modifier = Modifier.weight(1f))
+            OutlinedButton(onClick = { viewModel.searchPlace(query) }) { Text("Найти") }
+        }
+        Text("Поиск: данные © OpenStreetMap", fontSize = 11.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant)
+        when {
+            searchState.loading -> CircularProgressIndicator(Modifier.padding(4.dp))
+            searchState.error != null ->
+                Text(searchState.error!!, color = MaterialTheme.colorScheme.error, fontSize = 13.sp)
+            else -> searchState.results.forEach { p ->
+                Text(
+                    p.name,
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.fillMaxWidth().clickable {
+                        la = p.latitude.toString()
+                        lo = p.longitude.toString()
+                        l = p.name
+                        query = p.name
+                        viewModel.clearSearch()
+                    }.padding(vertical = 6.dp),
+                )
+            }
+        }
+        Spacer(Modifier.height(8.dp))
         OutlinedTextField(l, { l = it }, label = { Text("Город") }, singleLine = true,
             modifier = Modifier.fillMaxWidth())
         Spacer(Modifier.height(8.dp))

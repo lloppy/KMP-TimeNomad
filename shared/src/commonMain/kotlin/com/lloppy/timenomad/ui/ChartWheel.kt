@@ -24,10 +24,6 @@ import kotlin.math.sin
 
 private const val DEG2RAD = kotlin.math.PI / 180.0
 
-/**
- * Круговая астрологическая карта: кольца знаков и домов, глифы планет, линии аспектов.
- * Ориентация: Асцендент слева, долгота растёт против часовой стрелки.
- */
 @Composable
 fun ChartWheel(chart: Chart, modifier: Modifier = Modifier) {
     val measurer = rememberTextMeasurer()

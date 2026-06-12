@@ -60,7 +60,6 @@ internal enum class KeplerianBody(
         b = -0.01262724,
     );
 
-    /** Гелиоцентрический вектор в эклиптике J2000 для юлианских веков [t] от J2000. */
     fun heliocentric(t: Double): EclipticVector {
         val a = a0 + aDot * t
         val e = e0 + eDot * t
