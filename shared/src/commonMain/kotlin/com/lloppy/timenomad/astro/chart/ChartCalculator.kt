@@ -48,6 +48,7 @@ class ChartCalculator(
     private fun norm(deg: Double): Double = ((deg % 360.0) + 360.0) % 360.0
 
     companion object {
-        val defaultBodies: List<CelestialBody> = CelestialBody.classical + CelestialBody.NORTH_NODE
+        val defaultBodies: List<CelestialBody> =
+            CelestialBody.classical + CelestialBody.NORTH_NODE + CelestialBody.SOUTH_NODE
     }
 }

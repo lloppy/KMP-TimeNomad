@@ -29,6 +29,7 @@ import com.lloppy.timenomad.screens.planetaryhours.PlanetaryHoursScreen
 import com.lloppy.timenomad.screens.profiles.ProfileEditorScreen
 import com.lloppy.timenomad.screens.profiles.ProfilesScreen
 import com.lloppy.timenomad.screens.settings.SettingsScreen
+import com.lloppy.timenomad.screens.transits.TransitsScreen
 import kotlin.reflect.KClass
 
 private data class Tab(val route: Any, val routeClass: KClass<*>, val label: String, val icon: ImageVector)
@@ -77,6 +78,13 @@ fun AppNavHost() {
                     profileId = id,
                     onBack = { navController.popBackStack() },
                     onEdit = { navController.navigate(ProfileEditorDestination(id)) },
+                    onTransits = { navController.navigate(TransitsDestination(id)) },
+                )
+            }
+            composable<TransitsDestination> { backStackEntry ->
+                TransitsScreen(
+                    profileId = backStackEntry.toRoute<TransitsDestination>().profileId,
+                    onBack = { navController.popBackStack() },
                 )
             }
             composable<ProfilesDestination> {

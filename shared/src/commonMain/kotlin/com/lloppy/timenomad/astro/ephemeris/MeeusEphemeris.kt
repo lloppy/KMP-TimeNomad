@@ -62,13 +62,8 @@ class MeeusEphemeris : EphemerisService {
                 val m = MoonTheory.compute(t)
                 state(m.longitude, m.latitude, m.distanceKm / AU_KM)
             }
-            CelestialBody.NORTH_NODE -> {
-                val node = norm360(
-                    125.0445479 - 1934.1362891 * t + 0.0020754 * t * t +
-                        t * t * t / 467410.0 - t * t * t * t / 60616000.0,
-                )
-                state(node, 0.0, 0.0)
-            }
+            CelestialBody.NORTH_NODE -> state(meanNode(t), 0.0, 0.0)
+            CelestialBody.SOUTH_NODE -> state(norm360(meanNode(t) + 180.0), 0.0, 0.0)
             else -> {
                 val planet = keplerianFor(b).heliocentric(t)
                 fromVector(EclipticVector(planet.x - earth.x, planet.y - earth.y, planet.z - earth.z))
@@ -89,6 +84,11 @@ class MeeusEphemeris : EphemerisService {
     }
 
     private fun geocentric(jd: Double): Frame = Frame(jd)
+
+    private fun meanNode(t: Double): Double = norm360(
+        125.0445479 - 1934.1362891 * t + 0.0020754 * t * t +
+            t * t * t / 467410.0 - t * t * t * t / 60616000.0,
+    )
 
     private fun declination(lon: Double, lat: Double, obliquity: Double): Double {
         val sinDec = AstroMath.sinD(lat) * AstroMath.cosD(obliquity) +

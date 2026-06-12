@@ -11,12 +11,15 @@ enum class CelestialBody(val displayName: String, val glyph: String, val shortNa
     URANUS("Уран", "♅", "Ura"),
     NEPTUNE("Нептун", "♆", "Nep"),
     PLUTO("Плутон", "♇", "Plu"),
-    NORTH_NODE("Сев. узел", "☊", "Node");
+    NORTH_NODE("Сев. узел (Раху)", "☊", "Rahu"),
+    SOUTH_NODE("Юж. узел (Кету)", "☋", "Ketu");
 
     val isLuminary: Boolean get() = this == SUN || this == MOON
 
+    val isNode: Boolean get() = this == NORTH_NODE || this == SOUTH_NODE
+
     val canRetrograde: Boolean
-        get() = this != SUN && this != MOON && this != NORTH_NODE
+        get() = this != SUN && this != MOON && !isNode
 
     companion object {
         val classical: List<CelestialBody> =

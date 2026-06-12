@@ -40,6 +40,7 @@ fun ChartScreen(
     profileId: String?,
     onBack: () -> Unit,
     onEdit: (() -> Unit)? = null,
+    onTransits: (() -> Unit)? = null,
     viewModel: ChartViewModel = koinViewModel { parametersOf(profileId) },
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -70,6 +71,17 @@ fun ChartScreen(
 
             SectionCard(Modifier.fillMaxWidth()) {
                 Box(Modifier.padding(14.dp)) { ChartWheel(chart, Modifier.fillMaxWidth()) }
+            }
+
+            if (onTransits != null) {
+                SectionCard(Modifier.fillMaxWidth(), onClick = onTransits) {
+                    Text(
+                        "Транзиты сейчас →",
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(16.dp),
+                    )
+                }
             }
 
             SectionCard(Modifier.fillMaxWidth()) {

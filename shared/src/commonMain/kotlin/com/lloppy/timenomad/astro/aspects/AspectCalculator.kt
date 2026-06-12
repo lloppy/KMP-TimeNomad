@@ -4,6 +4,7 @@ import com.lloppy.timenomad.astro.math.AstroMath
 import com.lloppy.timenomad.astro.model.AspectHit
 import com.lloppy.timenomad.astro.model.AspectType
 import com.lloppy.timenomad.astro.model.PlanetPosition
+import com.lloppy.timenomad.astro.model.TransitHit
 import kotlin.math.abs
 
 class AspectCalculator(
@@ -17,6 +18,7 @@ class AspectCalculator(
             for (j in i + 1 until positions.size) {
                 val a = positions[i]
                 val b = positions[j]
+                if (a.body.isNode && b.body.isNode) continue
                 val separation = abs(AstroMath.norm180(a.longitude - b.longitude))
                 var best: AspectHit? = null
                 for (type in types) {
@@ -37,6 +39,39 @@ class AspectCalculator(
             }
         }
         return result.sortedBy { it.orb }
+    }
+
+    fun findTransits(natal: List<PlanetPosition>, transit: List<PlanetPosition>): List<TransitHit> {
+        val types = if (includeMinor) AspectType.entries else AspectType.majors
+        val result = mutableListOf<TransitHit>()
+        for (t in transit) {
+            for (n in natal) {
+                val separation = abs(AstroMath.norm180(t.longitude - n.longitude))
+                var best: TransitHit? = null
+                for (type in types) {
+                    val orb = abs(separation - type.angle)
+                    val allowed = type.defaultOrb * orbScale
+                    val current = best
+                    if (orb <= allowed && (current == null || orb < current.orb)) {
+                        best = TransitHit(
+                            transiting = t.body,
+                            natal = n.body,
+                            type = type,
+                            orb = orb,
+                            applying = isApplyingTransit(t, n, type),
+                        )
+                    }
+                }
+                best?.let(result::add)
+            }
+        }
+        return result.sortedBy { it.orb }
+    }
+
+    private fun isApplyingTransit(t: PlanetPosition, n: PlanetPosition, type: AspectType): Boolean {
+        val sepNow = abs(AstroMath.norm180(t.longitude - n.longitude))
+        val sepNext = abs(AstroMath.norm180((t.longitude + t.speedLongitude) - n.longitude))
+        return abs(sepNext - type.angle) < abs(sepNow - type.angle)
     }
 
     private fun isApplying(a: PlanetPosition, b: PlanetPosition, type: AspectType): Boolean {

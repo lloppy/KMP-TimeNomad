@@ -30,3 +30,11 @@ data class AspectHit(
     val orb: Double,
     val applying: Boolean,
 )
+
+data class TransitHit(
+    val transiting: CelestialBody,
+    val natal: CelestialBody,
+    val type: AspectType,
+    val orb: Double,
+    val applying: Boolean,
+)

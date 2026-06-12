@@ -12,6 +12,9 @@ object SkyChartDestination
 data class NatalChartDestination(val profileId: String)
 
 @Serializable
+data class TransitsDestination(val profileId: String)
+
+@Serializable
 object ProfilesDestination
 
 @Serializable

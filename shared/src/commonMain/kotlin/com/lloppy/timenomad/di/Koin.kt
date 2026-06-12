@@ -3,6 +3,8 @@ package com.lloppy.timenomad.di
 import com.lloppy.timenomad.AppViewModel
 import com.lloppy.timenomad.astro.aspects.AspectCalculator
 import com.lloppy.timenomad.astro.chart.ChartCalculator
+import com.lloppy.timenomad.astro.chart.TransitCalculator
+import com.lloppy.timenomad.astro.chart.TransitForecaster
 import com.lloppy.timenomad.astro.ephemeris.EphemerisService
 import com.lloppy.timenomad.astro.ephemeris.MeeusEphemeris
 import com.lloppy.timenomad.astro.planetaryhours.PlanetaryHoursCalculator
@@ -20,6 +22,7 @@ import com.lloppy.timenomad.screens.planetaryhours.PlanetaryHoursViewModel
 import com.lloppy.timenomad.screens.profiles.ProfileEditorViewModel
 import com.lloppy.timenomad.screens.profiles.ProfilesViewModel
 import com.lloppy.timenomad.screens.settings.SettingsViewModel
+import com.lloppy.timenomad.screens.transits.TransitsViewModel
 import com.lloppy.timenomad.settings.SettingsRepository
 import com.russhwolf.settings.Settings
 import org.koin.core.KoinApplication
@@ -44,6 +47,8 @@ val astroModule = module {
     single<EphemerisService> { MeeusEphemeris() }
     single { AspectCalculator() }
     single { ChartCalculator(ephemeris = get(), aspectCalculator = get()) }
+    single { TransitCalculator(ephemeris = get(), aspectCalculator = get()) }
+    single { TransitForecaster(ephemeris = get()) }
     single { PlanetaryHoursCalculator(ephemeris = get()) }
 }
 
@@ -55,6 +60,7 @@ val viewModelModule = module {
     factoryOf(::SettingsViewModel)
     factory { params -> ChartViewModel(params.getOrNull(), get(), get(), get()) }
     factory { params -> ProfileEditorViewModel(params.getOrNull(), get(), get()) }
+    factory { params -> TransitsViewModel(params.get(), get(), get(), get(), get(), get()) }
 }
 
 fun initKoin(config: (KoinApplication.() -> Unit)? = null) {

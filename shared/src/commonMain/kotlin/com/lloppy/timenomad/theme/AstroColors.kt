@@ -33,5 +33,6 @@ object AstroColors {
         CelestialBody.NEPTUNE -> Color(0xFF6E8FE0)
         CelestialBody.PLUTO -> Color(0xFFB07A9E)
         CelestialBody.NORTH_NODE -> Color(0xFFB9B3E0)
+        CelestialBody.SOUTH_NODE -> Color(0xFF9A8FB0)
     }
 }
